@@ -1,12 +1,17 @@
 import { FaPlus } from "react-icons/fa";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
+import { Link } from "react-router-dom";
 
 export default function AssignmentEditor() {
+    const { cid, aid } = useParams();
+    const assignment = assignments.find((assignment) => assignment._id === aid);
     return (
         <div id="wd-assignments-editor">
             <label htmlFor="wd-name">Assignment Name</label>
-            <input id="wd-name" className="form-control" value="A1" /><br />
+            <input id="wd-name" className="form-control" value={assignment?.title} /><br />
             <textarea id="wd-description" className="form-control" rows={10}>
-                The assignment is available online Submit a link to the landing page of
+                The assignment is available online.
             </textarea>
             <br />
             <div className="row">
@@ -90,9 +95,9 @@ export default function AssignmentEditor() {
             </div><br /><hr />
             <div className="row">
                 <div className="text-end">
-                    <button id="wd-add-assignment-group" className="btn btn-secondary me-2">Cancel
+                    <button id="wd-add-assignment-group" className="btn btn-secondary me-2"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`}>Cancel</a>
                     </button>
-                    <button id="wd-add-assignment" className="btn btn-danger">Save
+                    <button id="wd-add-assignment" className="btn btn-danger"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`}>Save</a>
                     </button>
                 </div>
             </div>
