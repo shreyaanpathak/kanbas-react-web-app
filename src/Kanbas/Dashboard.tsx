@@ -17,7 +17,7 @@ export default function Dashboard() {
                   <div className="card-body">
                     <h5 className="wd-dashboard-course-title card-title">
                       {course.name} </h5>
-                    <p className="wd-dashboard-course-title card-text overflow-y-hidden">
+                    <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                       {course.description} </p>
                     <button className="btn btn-primary"> Go </button>
                   </div>
