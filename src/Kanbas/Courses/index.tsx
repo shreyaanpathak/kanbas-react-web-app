@@ -6,19 +6,28 @@ import Home from "./Home";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
-import { courses } from "../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { addAssignment, editAssignment } from "./Assignments/reducer";
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
-
+  const dispatch = useDispatch();
+  const [ assignmentInfo, setAssignmentInfo] = useState({name: "", points: 0});
+  const id = `${cid}_${new Date().getTime()}`;
+  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
   const links = [
     { path: "Home", element: <Home /> },
     { path: "Modules", element: <Modules /> },
     { path: "Assignments", element: <Assignments /> },
-    { path: "Assignments/:aid", element: <AssignmentEditor /> },
-    { path: "People", element: <PeopleTable /> },
+    { path: "Assignments/:aid", element: <AssignmentEditor 
+      assignmentInfo={assignmentInfo} 
+      setAssignmentInfo={setAssignmentInfo} 
+      addAssignmentInfo={() => { dispatch(addAssignment({ ...assignmentInfo, course: cid })); setAssignmentInfo({name: "", points: 0}); }}
+      editAssignmentInfo={(id: any) => dispatch(editAssignment(id))} /> },
+    { path: "People", element: <PeopleTable /> }
   ]
 
   return (

@@ -110,5 +110,19 @@
     "section": "S101",
     "lastActivity": "2020-11-11",
     "totalActivity": "21:32:43"
+  },
+  {
+    "_id": "901",
+    "username": "sai",
+    "password": "admin",
+    "firstName": "Eekansh",
+    "lastName": "Muppasani",
+    "email": "sai@google.com",
+    "dob": "2000-09-22",
+    "role": "FACULTY",
+    "loginId": "001234560S",
+    "section": "S101",
+    "lastActivity": "2020-12-05",
+    "totalActivity": "12:23:34"
   }
 ]

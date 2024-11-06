@@ -1,16 +1,22 @@
-import { FaSearch, FaPlus, FaChevronCircleDown, FaEllipsisV } from 'react-icons/fa';
-import React from 'react';
+import { FaSearch, FaPlus, FaChevronCircleDown, FaEllipsisV, FaTrash } from 'react-icons/fa';
+import React , {useState} from 'react';
 import { MdAssignment } from 'react-icons/md';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BsGripVertical } from 'react-icons/bs';
-import ModuleControlButtons from '../Modules/ModuleControlButtons';
+import AssignmentControlButtons from './AssignmentControlButtons';
 import GreenCheckmark from '../Modules/GreenCheckmark';
 import { Link, useLocation, useParams } from "react-router-dom";
 import { courses, assignments } from "../../Database";
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteAssignment } from './reducer';
+import DeleteDialog from './DeleteDialog';
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments_list = assignments.filter((a) => a.course === cid);
+    const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+    const assignments_list = assignments.filter((a: any) => a.course === cid);
+    const [selectedAssignment, setSelectedAssignment] = useState(null);
+    const dispatch = useDispatch();
     return (
         <div id="wd-assignments" className="container">
             <div className="row mb-3">
@@ -31,7 +37,7 @@ export default function Assignments() {
                         <FaPlus /> Group
                     </button>
                     <button id="wd-add-assignment" className="btn btn-danger">
-                        <FaPlus /> Assignment
+                    <a className="text-decoration-none text-white" href={`#/Kanbas/Courses/${cid}/Assignments/temp`}><FaPlus /> Assignment</a>
                     </button>
                 </div>
             </div>
@@ -42,11 +48,11 @@ export default function Assignments() {
                         <FaChevronCircleDown />
                         &nbsp;&nbsp;Assignments
                         <FaEllipsisV className="float-end fs-6 my-2" />
-                        <ModuleControlButtons />
+                        <AssignmentControlButtons />
                         <div className="float-end fs-6 my-1 me-3">40% of Total</div>
                     </div>
                     <ul className="wd-lessons list-group rounded-0">
-                        {assignments_list.map((assignment) => (
+                        {assignments_list.map((assignment: any) => (
                             <li className="wd-lesson list-group-item p-3 ps-1">
                                 <div className="row align-items-center">
                                     <div className="col-auto">
@@ -63,6 +69,7 @@ export default function Assignments() {
                                         </div>
                                     </div>
                                     <div className="col-auto">
+                                        <FaTrash className="text-danger me-2 mb-1" onClick={() => dispatch(deleteAssignment(assignment._id))}/>
                                         <GreenCheckmark />
                                         <FaEllipsisV className="fs-6 my-2" />
                                     </div>
