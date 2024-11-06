@@ -1,22 +1,25 @@
 import { FaPlus } from "react-icons/fa";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { assignments } from "../../Database";
 import { Link } from "react-router-dom";
+import { addAssignment } from "./reducer";
 
-export default function AssignmentEditor() {
+export default function AssignmentEditor({ assignmentInfo, setAssignmentInfo, addAssignmentInfo, editAssignmentInfo }:
+    { assignmentInfo: any; setAssignmentInfo: (info: any) => void; addAssignmentInfo: () => void; editAssignmentInfo: (id: any) => void; }) {
     const { cid, aid } = useParams();
+    const { pathname } = useLocation();
     const assignment = assignments.find((assignment) => assignment._id === aid);
     return (
         <div id="wd-assignments-editor">
             <label htmlFor="wd-name">Assignment Name</label>
-            <input id="wd-name" className="form-control" value={assignment?.title} /><br />
+            <input id="wd-name" className="form-control" placeholder={assignment?.title} onChange={(e) => setAssignmentInfo({_id: aid, title: e.target.value, points: assignmentInfo.points})}/><br />
             <textarea id="wd-description" className="form-control" rows={10}>
                 The assignment is available online.
             </textarea>
             <br />
             <div className="row">
                 <div className="col text-end my-1">Points</div>
-                <div className="col"><input id="wd-points" className="form-control" value={100} /></div>
+                <div className="col"><input id="wd-points" className="form-control" onChange={(e) => setAssignmentInfo({_id: aid, title: assignmentInfo.title, points: e.target.value})} /></div>
             </div><br />
             <div className="row">
                 <div className="col text-end my-1">Assignment Group</div>
@@ -97,7 +100,8 @@ export default function AssignmentEditor() {
                 <div className="text-end">
                     <button id="wd-add-assignment-group" className="btn btn-secondary me-2"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`}>Cancel</a>
                     </button>
-                    <button id="wd-add-assignment" className="btn btn-danger"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`}>Save</a>
+                    <button id="wd-add-assignment" className="btn btn-danger"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`} 
+                    onClick={() => pathname.includes("temp") ? addAssignmentInfo() : editAssignmentInfo(assignmentInfo)}>Save</a>
                     </button>
                 </div>
             </div>
