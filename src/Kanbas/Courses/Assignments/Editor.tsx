@@ -3,12 +3,21 @@ import { useLocation, useParams } from "react-router";
 import { assignments } from "../../Database";
 import { Link } from "react-router-dom";
 import { addAssignment } from "./reducer";
+import * as assignmentClient from "./client";
+import { useDispatch } from "react-redux";
 
 export default function AssignmentEditor({ assignmentInfo, setAssignmentInfo, addAssignmentInfo, editAssignmentInfo }:
-    { assignmentInfo: any; setAssignmentInfo: (info: any) => void; addAssignmentInfo: () => void; editAssignmentInfo: (id: any) => void; }) {
+    { assignmentInfo: any; setAssignmentInfo: (info: any) => void; addAssignmentInfo: () => void; editAssignmentInfo: (id: any) => any; }) {
     const { cid, aid } = useParams();
     const { pathname } = useLocation();
+    const dispatch = useDispatch();
     const assignment = assignments.find((assignment) => assignment._id === aid);
+    const saveAssignment = async () => {
+        const newAssignment = { ...assignmentInfo, course: cid };
+        await assignmentClient.updateAssignment(newAssignment);
+        dispatch(editAssignmentInfo(assignmentInfo));
+      };
+    
     return (
         <div id="wd-assignments-editor">
             <label htmlFor="wd-name">Assignment Name</label>
@@ -101,10 +110,12 @@ export default function AssignmentEditor({ assignmentInfo, setAssignmentInfo, ad
                     <button id="wd-add-assignment-group" className="btn btn-secondary me-2"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`}>Cancel</a>
                     </button>
                     <button id="wd-add-assignment" className="btn btn-danger"><a className="text-white text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments`} 
-                    onClick={() => pathname.includes("temp") ? addAssignmentInfo() : editAssignmentInfo(assignmentInfo)}>Save</a>
+                    onClick={() => pathname.includes("temp") ? addAssignmentInfo() : saveAssignment()}>Save</a>
                     </button>
                 </div>
             </div>
         </div>
     );
 }
+
+
