@@ -9,6 +9,8 @@ import PeopleTable from "./People/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addAssignment, editAssignment } from "./Assignments/reducer";
+import * as coursesClient from "./client";
+import { create } from "domain";
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
@@ -18,6 +20,14 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const [ assignmentInfo, setAssignmentInfo] = useState({name: "", points: 0});
   const id = `${cid}_${new Date().getTime()}`;
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = { ...assignmentInfo, course: cid };
+    await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment({ ...assignmentInfo, course: cid }));
+    setAssignmentInfo({name: "", points: 0});
+  };
+
   const links = [
     { path: "Home", element: <Home /> },
     { path: "Modules", element: <Modules /> },
@@ -25,11 +35,10 @@ export default function Courses({ courses }: { courses: any[]; }) {
     { path: "Assignments/:aid", element: <AssignmentEditor 
       assignmentInfo={assignmentInfo} 
       setAssignmentInfo={setAssignmentInfo} 
-      addAssignmentInfo={() => { dispatch(addAssignment({ ...assignmentInfo, course: cid })); setAssignmentInfo({name: "", points: 0}); }}
+      addAssignmentInfo={createAssignmentForCourse}
       editAssignmentInfo={(id: any) => dispatch(editAssignment(id))} /> },
     { path: "People", element: <PeopleTable /> }
   ]
-
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
