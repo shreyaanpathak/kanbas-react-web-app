@@ -6,7 +6,6 @@ import { BsGripVertical } from 'react-icons/bs';
 import AssignmentControlButtons from './AssignmentControlButtons';
 import GreenCheckmark from '../Modules/GreenCheckmark';
 import { Link, useLocation, useParams } from "react-router-dom";
-import { courses, assignments } from "../../Database";
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteAssignment, setAssignments } from './reducer';
 import DeleteDialog from './DeleteDialog';
@@ -15,11 +14,13 @@ import * as assignmentsClient from "./client"
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const [selectedAssignment, setSelectedAssignment] = useState(null);
     const dispatch = useDispatch();
     const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        console.log("sugar");
+        console.log(assignments);
         dispatch(setAssignments(assignments));
     };
     useEffect(() => {
@@ -74,7 +75,7 @@ export default function Assignments() {
                                     <div className="col">
                                         <div className="fs-6">
                                             <a className="wd-assignment-link text-decoration-none" href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
-                                                <strong className="text-black fs-5">{assignment.title}</strong>
+                                                <strong className="text-black fs-5">{assignment.name}</strong>
                                             </a><br />
                                             <span className="text-danger">Multiple Modules</span> | <strong>Not Available Until</strong> May 6 at 12:00 AM | <br />
                                             <strong>Due</strong> May 13 at 11:59 PM | 100 pts

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { enroll } from './client';
 
 const initialState = {
     enrollments: [],
